@@ -1,16 +1,12 @@
-# Dependencies
 node_modules/
-client/node_modules/
-server/node_modules/
-
-# Environment files
-.env
-.env.local
-
-# Build files
 dist/
 build/
 
-# Logs
+.env
+.env.*
+!.env.example
+
+server/uploads/
+src-backup-*/
+
 *.log
-npm-debug.log*
