@@ -1,13 +1,27 @@
+
 const mongoose = require("mongoose");
 
+let connectionPromise = null;
+
 const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("MongoDB Connected");
-    } catch (err) {
-        console.log(err);
-        process.exit(1);
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
     }
+
+    if (!connectionPromise) {
+        connectionPromise = mongoose.connect(process.env.MONGO_URI)
+            .then(() => {
+                console.log("MongoDB Connected");
+                return mongoose.connection;
+            })
+            .catch((err) => {
+                connectionPromise = null;
+                console.error("MongoDB Connection Error:", err.message);
+                throw err;
+            });
+    }
+
+    return connectionPromise;
 };
 
 module.exports = connectDB;
