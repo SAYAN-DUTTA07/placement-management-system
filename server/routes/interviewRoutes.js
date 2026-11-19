@@ -10,7 +10,7 @@ getCompanies,
 getRecruiterInterviews,
 updateInterview,
 deleteInterview
-} = require("../controllers/interviewController");
+} = require("../controllers/InterviewController");
 
 const {
 protect,
