@@ -1,21 +1,18 @@
 
 require("dotenv").config();
 
+const app = require("./app");
+const connectDB = require("./config/db");
+
 module.exports = async (req, res) => {
     try {
-        console.log("STEP 1: Loading Express application");
-
-        const app = require("./app");
-
-        console.log("STEP 2: Express application loaded");
-
+        await connectDB();
         return app(req, res);
     } catch (error) {
-        console.error("BACKEND STARTUP ERROR:", error);
+        console.error("Database connection failed:", error.message);
 
-        return res.status(500).json({
-            message: "Backend startup failed",
-            error: error.message
+        return res.status(503).json({
+            message: "Database connection unavailable"
         });
     }
 };
