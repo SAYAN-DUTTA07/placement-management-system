@@ -3,54 +3,41 @@ const bcrypt=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
 
+
 exports.register = async (req, res) => {
-
   try {
-
     const { name, email, password, role } = req.body;
 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-
       return res.status(400).json({
         message: "User already exists"
       });
-
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    // Generate verification token
-
-    const user = await User.create({
-
+    await User.create({
       name,
       email,
       password: hashPassword,
       role
-
     });
 
-    const verifyURL =
-      `http://localhost:5000/api/auth/verify-email/${verificationToken}`;
-
-    res.status(201).json({
-
-      message: "Registration successful. Please verify your email."
-
+    return res.status(201).json({
+      message: "Registration successful. You can now log in."
     });
 
+  } catch (err) {
+    console.error("Registration error:", err);
+
+    return res.status(500).json({
+      message: "Registration failed. Please try again."
+    });
   }
-  catch (err) {
-
-    res.status(500).json({
-      message: err.message
-    });
-
-  }
-
 };
+
 
 //Login
 
